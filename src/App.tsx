@@ -19,9 +19,20 @@ const exampleNotes: Note[] = [
 function App() {
   const [notes, setNotes] = useState<Note[]>(exampleNotes)
 
+  function addNote() {
+    const newNote: Note = {
+      id: crypto.randomUUID(),
+      title: 'New Note',
+      content: '',
+      updatedAt: Date.now(),
+    }
+    setNotes([newNote, ...notes])
+    }
+
   return (
     <div>
       <h1>Notes</h1>
+      <button onClick={addNote}>+ New note</button>
       <ul>
         {notes.map((note) => (
           <li key={note.id}>
