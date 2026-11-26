@@ -18,6 +18,8 @@ const exampleNotes: Note[] = [
 
 function App() {
   const [notes, setNotes] = useState<Note[]>(exampleNotes)
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const activeNote = notes.find((note) => note.id === activeId)
 
   function addNote() {
     const newNote: Note = {
@@ -29,16 +31,30 @@ function App() {
     setNotes([newNote, ...notes])
     }
 
+    function deleteNote(id: string) {
+      setNotes(notes.filter((note) => note.id !== id))
+    }
+  
+    if (activeNote) {
+      return (
+        <div>
+          <button onClick={() => setActiveId(null)}>← Back</button>
+          <h1>{activeNote.title}</h1>
+          <p>{activeNote.content}</p>
+          <button onClick={() => { deleteNote(activeNote.id); setActiveId(null) }}>Delete</button>
+        </div>
+      )
+    }
+
   return (
     <div>
       <h1>Notes</h1>
       <button onClick={addNote}>+ New note</button>
       <ul>
         {notes.map((note) => (
-          <li key={note.id}>
+          <li key={note.id} onClick={() => setActiveId(note.id)}>
             <h2>{note.title}</h2>
-            <p>{note.content}</p>
-            <small>Last updated: {new Date(note.updatedAt).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</small>
+            <small>{new Date(note.updatedAt).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</small>
           </li>
         ))}
       </ul>
